@@ -1,0 +1,79 @@
+{
+  "name": "python-ai-fixer",
+  "displayName": "AI Python Fixer",
+  "description": "Ollamaを利用したAIが、Pythonコードのインデントや構文エラーを自動で修正します。",
+  "version": "0.0.1",
+  "publisher": "littlebuddha",
+  "icon": "images/icon.png",
+  "engines": {
+    "vscode": "^1.89.0"
+  },
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onCommand:python-ai-fixer.fixMyCode"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "python-ai-fixer.fixMyCode",
+        "title": "AI Fixer: Pythonコードを修正"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "when": "resourceLangId == python",
+          "command": "python-ai-fixer.fixMyCode",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "AI Python Fixer",
+      "properties": {
+        "python-ai-fixer.ollama.apiUrl": {
+          "type": "string",
+          "default": "http://localhost:11434/api/generate",
+          "description": "使用するOllama互換APIの生成エンドポイントURL。"
+        },
+        "python-ai-fixer.ollama.modelName": {
+          "type": "string",
+          "default": "deepseek-coder:6.7b-instruct",
+          "description": "コード修正に使用するOllamaのモデル名 (例: gemma2:9b, deepseek-coder:6.7b など)。"
+        }
+      }
+    }
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "python",
+    "lint",
+    "formatter",
+    "ai",
+    "ollama",
+    "fix",
+    "error"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/python-ai-fixer.git"
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/vscode": "~1.101.0",
+    "typescript": "^5.8.3",
+    "bun-types": "^1.2.16",
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "@typescript-eslint/parser": "^8.34.0",
+    "eslint": "^9.29.0"
+  }
+}

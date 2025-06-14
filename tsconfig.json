@@ -1,0 +1,25 @@
+// /python-ai-fixer/tsconfig.json
+// タイトル: TypeScript設定ファイル
+// 役割: TypeScriptのコンパイルオプションを定義する。
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2022",
+    "outDir": "out",
+    "rootDir": "src",
+    "lib": [
+      "ES2022"
+    ],
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node"
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
