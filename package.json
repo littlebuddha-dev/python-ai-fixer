@@ -2,7 +2,7 @@
   "name": "python-ai-fixer",
   "displayName": "AI Python Fixer",
   "description": "Ollamaを利用したAIが、Pythonコードのインデントや構文エラーを自動で修正します。",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "littlebuddha",
   "icon": "images/icon.png",
   "engines": {
@@ -10,13 +10,23 @@
   },
   "main": "./out/extension.js",
   "activationEvents": [
-    "onCommand:python-ai-fixer.fixMyCode"
+    "onCommand:python-ai-fixer.fixMyCode",
+    "onCommand:python-ai-fixer.fixLocally",
+    "onCommand:python-ai-fixer.checkConfig"
   ],
   "contributes": {
     "commands": [
       {
         "command": "python-ai-fixer.fixMyCode",
-        "title": "AI Fixer: Pythonコードを修正"
+        "title": "AI Fixer: Pythonコードを修正（AI使用）"
+      },
+      {
+        "command": "python-ai-fixer.fixLocally",
+        "title": "AI Fixer: Pythonコードを修正（ローカルのみ）"
+      },
+      {
+        "command": "python-ai-fixer.checkConfig",
+        "title": "AI Fixer: Ollama接続確認"
       }
     ],
     "menus": {
@@ -24,7 +34,24 @@
         {
           "when": "resourceLangId == python",
           "command": "python-ai-fixer.fixMyCode",
-          "group": "navigation"
+          "group": "1_modification@1"
+        },
+        {
+          "when": "resourceLangId == python",
+          "command": "python-ai-fixer.fixLocally",
+          "group": "1_modification@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "python-ai-fixer.fixMyCode",
+          "when": "resourceLangId == python"
+        },
+        {
+          "command": "python-ai-fixer.fixLocally"
+        },
+        {
+          "command": "python-ai-fixer.checkConfig"
         }
       ]
     },
@@ -40,6 +67,53 @@
           "type": "string",
           "default": "deepseek-coder:6.7b-instruct",
           "description": "コード修正に使用するOllamaのモデル名 (例: gemma2:9b, deepseek-coder:6.7b など)。"
+        },
+        "python-ai-fixer.ollama.useSystemPrompt": {
+          "type": "boolean",
+          "default": false,
+          "description": "チャット形式APIとシステムプロンプトを使用する（より確実にコードのみを取得）。"
+        },
+        "python-ai-fixer.ollama.temperature": {
+          "type": "number",
+          "default": 0.1,
+          "minimum": 0.0,
+          "maximum": 2.0,
+          "description": "生成の創造性を制御する温度パラメータ（低いほど一貫性が高い）。"
+        },
+        "python-ai-fixer.ollama.maxTokens": {
+          "type": "number",
+          "default": 2048,
+          "minimum": 100,
+          "maximum": 8192,
+          "description": "生成する最大トークン数。"
+        },
+        "python-ai-fixer.ollama.fallbackToManual": {
+          "type": "boolean",
+          "default": true,
+          "description": "AI修正が失敗した場合に手動修正モードにフォールバックする。"
+        },
+        "python-ai-fixer.ollama.enableDebugLogging": {
+          "type": "boolean",
+          "default": true,
+          "description": "デバッグログを有効にする（開発者コンソールで確認可能）。"
+        },
+        "python-ai-fixer.ollama.enableAI": {
+          "type": "boolean",
+          "default": true,
+          "description": "AI機能を有効にする。無効にするとローカル修正のみ使用。"
+        },
+        "python-ai-fixer.local.preferredIndent": {
+          "type": "string",
+          "enum": ["spaces", "tabs"],
+          "default": "spaces",
+          "description": "ローカル修正で使用するインデント形式。"
+        },
+        "python-ai-fixer.local.indentSize": {
+          "type": "number",
+          "default": 4,
+          "minimum": 2,
+          "maximum": 8,
+          "description": "スペースインデントのサイズ。"
         }
       }
     }
@@ -56,7 +130,8 @@
     "ai",
     "ollama",
     "fix",
-    "error"
+    "error",
+    "indentation"
   ],
   "repository": {
     "type": "git",
